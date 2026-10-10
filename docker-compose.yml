@@ -134,8 +134,8 @@ services:
       context: .
       dockerfile: docker/Dockerfile.frontend
       args:
-        NEXT_PUBLIC_BACKEND_URL: "http://localhost:3010/api/v1"
-        NEXT_PUBLIC_HOOKS_URL: "http://localhost:3011/hooks/catch"
+        NEXT_PUBLIC_BACKEND_URL: ${NEXT_PUBLIC_BACKEND_URL:-http://localhost:3010/api/v1}
+        NEXT_PUBLIC_HOOKS_URL: ${NEXT_PUBLIC_HOOKS_URL:-http://localhost:3011/hooks/catch}
     container_name: flowify-frontend
     restart: always
     ports:
