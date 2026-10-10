@@ -4,6 +4,7 @@ import { userRouter } from "./router/user.js";
 import { zapRouter } from "./router/zap.js";
 import { triggerRouter } from "./router/trigger.js";
 import { actionRouter } from "./router/action.js";
+import { hooksRouter } from "./router/hooks.js";
 import { startScheduler } from "./workers/schedule.js";
 
 const app =express();
@@ -16,6 +17,7 @@ app.use("/api/v1/zap",zapRouter);
 
 app.use("/api/v1/trigger", triggerRouter);
 app.use("/api/v1/action", actionRouter);
+app.use("/hooks", hooksRouter);
 startScheduler();
 
 const PORT = process.env.PORT || 3010;

@@ -24,6 +24,7 @@
     "start:processor": "npm run start --workspace=processor",
     "start:workers": "npm run start --workspace=workers",
     "start:frontend": "npm run start --workspace=flowify-frontend",
+    "start:all": "node scripts/start-all.js",
     "db:generate": "NODE_PATH=primary-backend/node_modules npx --prefix primary-backend prisma generate --config=prisma7.config.ts",
     "db:migrate": "NODE_PATH=primary-backend/node_modules npx --prefix primary-backend prisma migrate dev --config=prisma7.config.ts",
     "db:studio": "NODE_PATH=primary-backend/node_modules npx --prefix primary-backend prisma studio --config=prisma7.config.ts"
