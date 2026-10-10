@@ -1,0 +1,1 @@
+export { BACKEND_URL, HOOKS_URL } from "../config";

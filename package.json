@@ -1,0 +1,36 @@
+{
+  "name": "flowify-monorepo",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "workspaces": [
+    "packages/*",
+    "primary-backend",
+    "hooks",
+    "processor",
+    "workers",
+    "flowify-frontend"
+  ],
+  "scripts": {
+    "build": "npm run build --workspace=@flowify/shared && npm run build --workspace=primary-backend && npm run build --workspace=hooks && npm run build --workspace=processor && npm run build --workspace=workers",
+    "build:shared": "npm run build --workspace=@flowify/shared",
+    "dev:backend": "npm run dev --workspace=primary-backend",
+    "dev:hooks": "npm run dev --workspace=hooks",
+    "dev:processor": "npm run dev --workspace=processor",
+    "dev:workers": "npm run dev --workspace=workers",
+    "dev:frontend": "npm run dev --workspace=flowify-frontend",
+    "start:backend": "npm run start --workspace=primary-backend",
+    "start:hooks": "npm run start --workspace=hooks",
+    "start:processor": "npm run start --workspace=processor",
+    "start:workers": "npm run start --workspace=workers",
+    "start:frontend": "npm run start --workspace=flowify-frontend",
+    "db:generate": "NODE_PATH=primary-backend/node_modules npx --prefix primary-backend prisma generate --config=prisma7.config.ts",
+    "db:migrate": "NODE_PATH=primary-backend/node_modules npx --prefix primary-backend prisma migrate dev --config=prisma7.config.ts",
+    "db:studio": "NODE_PATH=primary-backend/node_modules npx --prefix primary-backend prisma studio --config=prisma7.config.ts"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "prisma": "^7.10.0",
+    "typescript": "^5.0.0"
+  }
+}

@@ -1,0 +1,89 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client"
+  output   = "../packages/shared/src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id       String @id @default(uuid())
+  name     String
+  email    String 
+  password String
+  zaps     Zap[]
+}
+
+model Zap {
+  id              String           @id @default(uuid())
+  userid          String
+  triggerId       String
+  trigger         Trigger?
+  name            String           @default("name")
+  actions         Actions[]
+  zapRuns         ZapRun[]
+  isActive        Boolean          @default(true)
+  user            User             @relation(fields: [userid], references: [id])
+  scheduleTrigger ScheduleTrigger?
+  createdAt       DateTime         @default(now())
+}
+
+model Trigger {
+  id        String           @id @default(uuid())
+  zapId     String           @unique
+  triggerId String
+  metadata  Json             @default("{}")
+  type      AvailableTrigger @relation(fields: [triggerId], references: [id])
+  zap       Zap              @relation(fields: [zapId], references: [id])
+}
+
+model Actions {
+  id           String          @id @default(uuid())
+  zapId        String
+  zap          Zap             @relation(fields: [zapId], references: [id])
+  actionId     String 
+  metadata     Json            @default("{}")
+  type         AvailableAction @relation(fields: [actionId], references: [id])
+  sortingorder Int             @default(0)
+}
+
+model AvailableAction {
+  id      String    @id @default(uuid())
+  name    String
+  imageA  String
+  actions Actions[]
+}
+
+model AvailableTrigger {
+  id       String    @id @default(uuid())
+  name     String
+  imageA   String
+  triggers Trigger[]
+}
+
+model ZapRun {
+  id           String        @id @default(uuid())
+  metadata     Json
+  zapId        String
+  zap          Zap           @relation(fields: [zapId], references: [id])
+  zapRunOutbox ZapRunOutbox?
+}
+
+model ZapRunOutbox {
+  id       String @id @default(uuid())
+  zapRunId String @unique
+  zapRun   ZapRun @relation(fields: [zapRunId], references: [id])
+}
+
+model ScheduleTrigger {
+  id        String   @id @default(uuid())
+  zapId     String   @unique
+  zap       Zap      @relation(fields: [zapId], references: [id])
+  cronExpr  String   // Stores the time pattern (e.g., "15 9 * * *")
+  nextRunAt DateTime // Keeps track of exactly when this should fire next
+}
+

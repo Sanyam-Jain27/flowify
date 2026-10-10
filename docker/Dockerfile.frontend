@@ -1,0 +1,30 @@
+# Build stage
+FROM node:20-alpine AS builder
+
+WORKDIR /app
+
+COPY flowify-frontend/package*.json ./
+RUN npm install
+
+COPY flowify-frontend ./
+
+ARG NEXT_PUBLIC_BACKEND_URL
+ARG NEXT_PUBLIC_HOOKS_URL
+ENV NEXT_PUBLIC_BACKEND_URL=$NEXT_PUBLIC_BACKEND_URL
+ENV NEXT_PUBLIC_HOOKS_URL=$NEXT_PUBLIC_HOOKS_URL
+
+RUN npm run build
+
+# Production Runner stage
+FROM node:20-alpine AS runner
+WORKDIR /app
+
+ENV NODE_ENV=production
+ENV PORT=3000
+
+COPY --from=builder /app ./
+
+EXPOSE 3000
+
+CMD ["npm", "run", "start"]
+

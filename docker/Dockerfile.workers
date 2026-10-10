@@ -1,0 +1,36 @@
+# Build stage
+FROM node:20-alpine AS builder
+
+WORKDIR /app
+
+# Copy dependency manifests
+COPY package*.json ./
+COPY prisma ./prisma/
+COPY packages/shared/package*.json ./packages/shared/
+COPY workers/package*.json ./workers/
+COPY primary-backend/package*.json ./primary-backend/
+COPY hooks/package*.json ./hooks/
+COPY processor/package*.json ./processor/
+
+# Install dependencies and generate Prisma client
+RUN npm install
+RUN npx prisma generate
+
+# Copy source code
+COPY tsconfig.json ./
+COPY packages ./packages
+COPY workers ./workers
+
+# Build workers and shared packages
+RUN ./primary-backend/node_modules/.bin/tsc -b
+
+# Production Runner stage
+FROM node:20-alpine AS runner
+WORKDIR /app
+
+ENV NODE_ENV=production
+
+COPY --from=builder /app ./
+
+CMD ["node", "workers/dist/index.js"]
+

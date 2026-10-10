@@ -1,0 +1,13 @@
+node_modules
+*/node_modules
+flowify-frontend/node_modules
+flowify-frontend/.next
+flowify-frontend/out
+dist
+*/dist
+.git
+.gitignore
+.env
+*.log
+.DS_Store
+
